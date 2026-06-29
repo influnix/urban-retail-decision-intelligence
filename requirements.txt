@@ -1,0 +1,14 @@
+numpy
+pandas
+pyarrow
+scikit-learn
+matplotlib
+jupyter
+ipykernel
+pytest
+ruff
+pydantic
+pyyaml
+python-dotenv
+torch
+torchvision
