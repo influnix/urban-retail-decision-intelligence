@@ -32,20 +32,41 @@ Python 3.11을 사용한다.
 
 ---
 
-## Decision 002: Start with CPU PyTorch
+## Decision 002: CUDA 기반 PyTorch 환경 사용
 
-### Context
+### 상황
 
-초기 단계의 목적은 환경과 데이터 파이프라인 검증이다.
+개발 장비에 NVIDIA RTX 3050 GPU가 설치되어 있으며, 향후 PyTorch 기반 신경망 모델과 시계열.공간 모델을 실험한 계획이다.
 
-### Decision
+### 검토한 선택지
 
-GPU 설정 전에 CPU 버전으로 PyTorch 동작을 검증한다.
+1. CPU 전용 PyTorch
+2. CUDA 기반 GPU PyTorch
+3. 초기에는 CPU를 사용하고 이후 GPU 환경으로 전환
 
-### Reason
+### 결정
 
-초기 환경 오류와 CUDA 호환성 오류를 분리하기 위해서다.
+CUDA 12.6 기반 PyTorch 환경을 초기 개발환경으로 사용한다.
 
-### Revisit condition
+### 근거
+- 현재 장비에서 `torch.cuda.is_available()`이 `True`로 확인됐다.
+- 동일한 Conda 환경에서 데이터 처리와 GPU 학습을 모두 수행할 수 있다.
+- 이후 MLP, Temporal Fusion Transformer, Graph Neural Network 등을 비교할 때 환경을 다시 구축할 필요가 없다.
+- GPU 환경을 먼저 검증해 CUDA 호환성 문제를 초기 단계에서 발견할 수 있다.
 
-신경망 학습 시간이 실제 개발 병목이 될 때 GPU 환경을 구성한다.
+### 확인 결과
+- PyTorch 버전: `2.12.1+cu126`
+- CUDA 사용 가능 여부: `True`
+- 기본 텐서 연산 결과: `11.0`
+
+### 위험 요소
+- CUDA 패키지는 CPU 버전보다 설치 용량이 크다.
+- PyTorch, torchvision, CUDA 버전 간 호환성이 맞지 않으면 실행 오류가 발생할 수 있다.
+- GPU 메모리가 부족한 경우 배치 크기 조정이나 CPU 대체 실행이 필요하다.
+
+### 재검토 조건
+다음 상황이 발생하면 환경 구성을 다시 검토한다.
+- PyTorch와 CUDA 버전 충돌
+- GPU 메모리 부족으로 학습이 반복적으로 실패
+- 클라우드 환경과 로컬 환경의 재현성 차이 발생
+- 운영 파이프라인에서 CPU 실행이 더 경제적인 것으로 판단됨
