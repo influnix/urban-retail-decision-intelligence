@@ -22,7 +22,7 @@ ruff check .
 ```
 
 ### 실제 결과
-- Python 실행 경로: `C:\Users\PC\miniconda3\envs\mosaic\pthon.exe`
+- Python 실행 경로: `C:\Users\PC\miniconda3\envs\mosaic\python.exe`
 - Python 버전: `3.11.15`
 - NumPy 버전: `2.4.6`
 - pandas 버전: `3.0.4`
