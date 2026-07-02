@@ -48,3 +48,26 @@ can't open file '...\scripts\verify_environment.py':
 Conda 환경 안에서 Python, 주요 데이터 분석 패키지, PyTorch 및 CUDA가 정상적으로 실행된다.
 자동 테스트와 정적 코드 검사도 통과했으므로 초기 개발환경 검증을 완료했다.
 초기 오류는 패키지나 환경 문제가 아니라 실행 대상 파일이 존재하지 않아 발생한 작업 순서 문제였다.
+
+---
+
+## EXP-001
+
+### 발생한 오류
+
+1. Ruff에서 import 정렬 오류 `I001`이 발생했다.
+2. 일반 Python 실행에서 `mosaic` 패키지를 찾지 못했다.
+
+### 원인 분석
+
+pytest는 `pyproject.toml`의 `pythonpath = ["src"]` 설정을 사용하지만,
+일반 python 스크립트 실행에는 해당 설정이 적용되지 않는다.
+
+따라서 테스트에서는 import가 성공했지만,
+`python scripts/inspect_raw_archives.py` 실행에서는
+`src/mosaic` 패키지를 찾지 못했다.
+
+### 해결 방법
+
+프로젝트에 build system과 package discovery 설정을 추가하고
+`python -m pip install -e .` 명령으로 editable package로 설치했다.

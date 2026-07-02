@@ -42,3 +42,8 @@ credentials
 *.pem
 
 설계.md
+
+# Python package build artifacts
+*.egg-info/
+build/
+dist/
